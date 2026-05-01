@@ -32,10 +32,22 @@
         }
 
         .tweety-img {
-            width: 120px;
+            width: 110px;
             height: auto;
             animation: characterBounce 1.5s infinite;
-            margin-bottom: 20px;
+        }
+
+        /* --- Milestone Badge --- */
+        .milestone-badge {
+            background: white;
+            color: #ff4757;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: pulse 2s infinite;
         }
 
         /* --- Buttons --- */
@@ -52,7 +64,7 @@
             transition: 0.3s;
             margin: 10px;
         }
-        .primary-btn:hover { transform: scale(1.05); background-color: #ff6b81; }
+        .primary-btn:hover { transform: scale(1.05); }
 
         .surprise-btn {
             background-color: #8e44ad;
@@ -66,7 +78,7 @@
             margin: 20px 0;
         }
 
-        /* --- Memory Vault --- */
+        /* --- Memory Vault & Polaroid Zoom --- */
         .memory-vault {
             display: flex;
             overflow-x: auto;
@@ -85,12 +97,30 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             min-width: 160px;
             scroll-snap-align: center;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: zoom-in;
         }
         .polaroid:nth-child(odd) { transform: rotate(-2deg); }
         .polaroid:nth-child(even) { transform: rotate(3deg); }
         .polaroid img { width: 160px; height: 160px; object-fit: cover; background: #f0f0f0; display: block; }
         .polaroid span { display: block; padding-top: 10px; font-family: 'Comic Sans MS', cursive; font-size: 0.85rem; color: #333; }
+
+        /* Zoomed State */
+        .polaroid.zoomed {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.8) rotate(0deg) !important;
+            z-index: 2000;
+            cursor: zoom-out;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1500;
+        }
 
         /* --- Reveal Elements --- */
         #surprise-img-display, #letter-display {
@@ -113,9 +143,17 @@
             animation: pulse 2s infinite;
         }
 
+        footer {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #4b0082;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
         /* --- Animations --- */
         @keyframes characterBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
         .petal { position: fixed; top: -10%; z-index: 5; animation: fall linear forwards; }
@@ -126,7 +164,11 @@
 </head>
 <body>
 
+    <div id="overlay" onclick="closeZoom()"></div>
+
     <div id="page-1" class="container">
+        <div class="milestone-badge">Day 365 of Our Story ✨</div>
+        <br>
         <img src="tweety.png" alt="Tweety" class="tweety-img">
         <h1>Happy 1st Anniversary, Tweetu! 🐣❤️</h1>
         <p style="color: #4b0082; font-weight: bold;">One year of beautiful memories.</p>
@@ -138,29 +180,31 @@
         <h1>Our Beautiful Year Together ✨</h1>
         
         <div class="memory-vault">
-            <div class="polaroid"> <img src="IMG_20260213_153055.jpg" alt="1"> <span>The Start ✨</span> </div>
-            <div class="polaroid"> <img src="IMG20250824114211.jpg" alt="2"> <span>That Smile! 😍</span> </div>
-            <div class="polaroid"> <img src="IMG20250926162437.jpg" alt="3"> <span>Favorite Day 🍕</span> </div>
-            <div class="polaroid"> <img src="IMG_20260213_153258.jpg" alt="4"> <span>Togetherness ❤️</span> </div>
-            <div class="polaroid"> <img src="IMG_20251125_013640.jpg" alt="5"> <span>Special Moments 🌸</span> </div>
-            <div class="polaroid"> <img src="IMG-20251126-WA0006.jpg" alt="6"> <span>Sweetest Memory 🍬</span> </div>
-            <div class="polaroid"> <img src="IMG20251207151640.jpg" alt="7"> <span>Our Vibe ✨</span> </div>
-            <div class="polaroid"> <img src="IMG20251223152546.jpg" alt="8"> <span>Just Us. 👫</span> </div>
-            <div class="polaroid"> <img src="IMG_20260213_185802.jpg" alt="9"> <span>Pingu & Tweetu 🐧</span> </div>
-            <div class="polaroid"> <img src="IMG20260125201150.jpg" alt="10"> <span>Forever! ♾️</span> </div>
+            <div class="polaroid" onclick="toggleZoom(this)"> <img src="IMG_20260213_153055.jpg"> <span>The Start ✨</span> </div>
+            <div class="polaroid" onclick="toggleZoom(this)"> <img src="IMG20250824114211.jpg"> <span>That Smile! 😍</span> </div>
+            <div class="polaroid" onclick="toggleZoom(this)"> <img src="IMG20250926162437.jpg"> <span>Favorite Day 🍕</span> </div>
+            <div class="polaroid" onclick="toggleZoom(this)"> <img src="IMG_20260213_153258.jpg"> <span>Togetherness ❤️</span> </div>
+            <div class="polaroid" onclick="toggleZoom(this)"> <img src="IMG_20251125_013640.jpg"> <span>Special Moments 🌸</span> </div>
+            <div class="polaroid" onclick="toggleZoom(this)"> <img src="IMG-20251126-WA0006.jpg"> <span>Sweetest Memory 🍬</span> </div>
+            <div class="polaroid" onclick="toggleZoom(this)"> <img src="IMG20251207151640.jpg"> <span>Our Vibe ✨</span> </div>
+            <div class="polaroid" onclick="toggleZoom(this)"> <img src="IMG20251223152546.jpg"> <span>Just Us. 👫</span> </div>
+            <div class="polaroid" onclick="toggleZoom(this)"> <img src="IMG_20260213_185802.jpg"> <span>Pingu & Tweetu 🐧</span> </div>
+            <div class="polaroid" onclick="toggleZoom(this)"> <img src="IMG20260125201150.jpg"> <span>Forever! ♾️</span> </div>
         </div>
 
-        <div class="letter-container" style="margin-top: 40px;">
+        <div id="letter-section" class="letter-container" style="margin-top: 40px;">
             <h3 style="color: #4b0082;">Now, peek inside...</h3>
             <button id="letter-btn" class="envelope-btn" onclick="revealLetter()">✉️</button>
-            <p id="close-hint" style="display:none; font-size: 0.8rem; color: #4b0082;">(Tap the letter to close it after reading)</p>
+            <p id="close-hint" style="display:none; font-size: 0.8rem; color: #4b0082;">(Tap the letter to close it)</p>
             <img id="letter-display" src="IMG_20260501_183817217_HDR~2.jpg" alt="Anniversary Letter" onclick="closeLetter()">
         </div>
 
-        <div style="margin-top: 50px; padding-bottom: 50px;">
+        <div id="surprise-section" style="margin-top: 50px; padding-bottom: 20px;">
             <button class="surprise-btn" onclick="revealSurprise()">Surprise alert 🚨</button>
-            <img id="surprise-img-display" src="IMG_20260501_184955952_HDR.jpg" alt="Surprise Picture">
+            <img id="surprise-img-display" src="Picsart_26-05-01_21-09-02-780.jpg" alt="Surprise Picture">
         </div>
+
+        <footer>Made with ❤️ by Pingu</footer>
 
         <audio id="anniversary-music" loop>
             <source src="KeuJaneNa.mp3" type="audio/mpeg">
@@ -174,11 +218,30 @@
             startPetals(['❤️', '✨', '💖', '💍']);
         }
 
+        // --- Improved Zoom Logic ---
+        function toggleZoom(el) {
+            const overlay = document.getElementById('overlay');
+            if (el.classList.contains('zoomed')) {
+                closeZoom();
+            } else {
+                closeZoom(); // Close any other zoomed image first
+                el.classList.add('zoomed');
+                overlay.style.display = 'block';
+            }
+        }
+
+        function closeZoom() {
+            document.querySelectorAll('.polaroid').forEach(p => p.classList.remove('zoomed'));
+            document.getElementById('overlay').style.display = 'none';
+        }
+
         function revealSurprise() {
             const surpriseImg = document.getElementById('surprise-img-display');
             surpriseImg.style.display = 'block';
-            startPetals(['🎉', '✨', '🎁', '💖']);
-            surpriseImg.scrollIntoView({ behavior: 'smooth' });
+            startPetals(['🎉', '🎊', '🎁', '✨']); // Confetti petals
+            setTimeout(() => {
+                surpriseImg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
         }
 
         function revealLetter() {
@@ -192,13 +255,16 @@
             document.getElementById('letter-btn').innerText = '📂';
             document.getElementById('letter-btn').style.animation = 'none';
             
-            startPetals(['🌸', '🎊', '✨', '❤️']);
+            startPetals(['❤️', '💖', '💕', '🌸']); // Love petals
+            
+            setTimeout(() => {
+                letter.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
         }
 
         function closeLetter() {
             document.getElementById('letter-display').style.display = 'none';
             document.getElementById('close-hint').style.display = 'none';
-            // Reset the button so it can be clicked again
             document.getElementById('letter-btn').innerText = '✉️';
             document.getElementById('letter-btn').style.animation = 'pulse 2s infinite';
         }
