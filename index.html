@@ -50,10 +50,23 @@
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
             transition: 0.3s;
+            margin: 10px;
         }
         .primary-btn:hover { transform: scale(1.05); background-color: #ff6b81; }
 
-        /* --- Memory Vault (Preserved from original) --- */
+        .surprise-btn {
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(142, 68, 173, 0.3);
+            margin: 20px 0;
+        }
+
+        /* --- Memory Vault --- */
         .memory-vault {
             display: flex;
             overflow-x: auto;
@@ -79,12 +92,16 @@
         .polaroid img { width: 160px; height: 160px; object-fit: cover; background: #f0f0f0; display: block; }
         .polaroid span { display: block; padding-top: 10px; font-family: 'Comic Sans MS', cursive; font-size: 0.85rem; color: #333; }
 
-        /* --- Letter Reveal --- */
-        .letter-container {
-            margin: 30px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        /* --- Reveal Elements --- */
+        #surprise-img-display, #letter-display {
+            display: none;
+            margin: 20px auto;
+            max-width: 90%;
+            border: 8px solid white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease-in;
+            cursor: pointer; /* To indicate it can be clicked to close */
         }
 
         .envelope-btn {
@@ -95,17 +112,6 @@
             transition: transform 0.3s ease;
             animation: pulse 2s infinite;
         }
-        .envelope-btn:hover { transform: scale(1.2); }
-
-        #letter-display {
-            display: none;
-            margin-top: 20px;
-            max-width: 90%;
-            border: 8px solid white;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            animation: fadeIn 1s ease-in;
-        }
 
         /* --- Animations --- */
         @keyframes characterBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
@@ -115,7 +121,6 @@
         .petal { position: fixed; top: -10%; z-index: 5; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(110vh) translateX(80px) rotate(360deg); } }
 
-        /* --- Page Toggling --- */
         #page-2 { display: none; }
     </style>
 </head>
@@ -124,7 +129,7 @@
     <div id="page-1" class="container">
         <img src="tweety.png" alt="Tweety" class="tweety-img">
         <h1>Happy 1st Anniversary, Tweetu! 🐣❤️</h1>
-        <p style="color: #4b0082; font-weight: bold;">One year of us, and forever to go.</p>
+        <p style="color: #4b0082; font-weight: bold;">One year of beautiful memories.</p>
         <br>
         <button class="primary-btn" onclick="goToSecondPage()">hug me to seek through my heart 🤗</button>
     </div>
@@ -145,15 +150,20 @@
             <div class="polaroid"> <img src="IMG20260125201150.jpg" alt="10"> <span>Forever! ♾️</span> </div>
         </div>
 
-        <div class="letter-container">
-            <h3 style="color: #4b0082;">You have a message...</h3>
+        <div class="letter-container" style="margin-top: 40px;">
+            <h3 style="color: #4b0082;">Now, peek inside...</h3>
             <button id="letter-btn" class="envelope-btn" onclick="revealLetter()">✉️</button>
-            
-            <img id="letter-display" src="IMG_20260501_183817217_HDR~2.jpg" alt="Anniversary Letter">
+            <p id="close-hint" style="display:none; font-size: 0.8rem; color: #4b0082;">(Tap the letter to close it after reading)</p>
+            <img id="letter-display" src="" alt="Anniversary Letter" onclick="closeLetter()">
         </div>
 
-        <audio id="anniversary-music">
-            <source src="KeuJaneNa.mp3" type="audio/mpeg">
+        <div style="margin-top: 50px; padding-bottom: 50px;">
+            <button class="surprise-btn" onclick="revealSurprise()">Surprise alert 🚨</button>
+            <img id="surprise-img-display" src="IMG_20260501_184955952_HDR.jpg" alt="Surprise Picture">
+        </div>
+
+        <audio id="anniversary-music" loop>
+            <source src="" type="audio/mpeg">
         </audio>
     </div>
 
@@ -164,21 +174,32 @@
             startPetals(['❤️', '✨', '💖', '💍']);
         }
 
+        function revealSurprise() {
+            const surpriseImg = document.getElementById('surprise-img-display');
+            surpriseImg.style.display = 'block';
+            startPetals(['🎉', '✨', '🎁', '💖']);
+            // Scroll to the surprise image smoothly
+            surpriseImg.scrollIntoView({ behavior: 'smooth' });
+        }
+
         function revealLetter() {
-            // Play Music
             const audio = document.getElementById('anniversary-music');
             audio.play().catch(e => console.log("Music interaction required"));
 
-            // Show Letter
             const letter = document.getElementById('letter-display');
             letter.style.display = 'block';
+            document.getElementById('close-hint').style.display = 'block';
 
-            // Change Envelope to Open
             document.getElementById('letter-btn').innerText = '📂';
             document.getElementById('letter-btn').style.animation = 'none';
             
-            // Extra Celebration
             startPetals(['🌸', '🎊', '✨', '❤️']);
+        }
+
+        function closeLetter() {
+            document.getElementById('letter-display').style.display = 'none';
+            document.getElementById('close-hint').style.display = 'none';
+            // The music continues to play because we don't call audio.pause()
         }
 
         function startPetals(items) {
