@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Surprise for Tweetu</title>
+    <title>Our 1st Anniversary - Pingu & Tweetu</title>
     <style>
         body {
             background-color: #DDA0DD; 
@@ -28,16 +28,38 @@
             color: #4b0082;
             font-size: 1.8rem;
             text-shadow: 2px 2px 4px rgba(255,255,255,0.4);
-            margin: 10px 0;
+            margin: 15px 0;
         }
 
-        /* --- Memory Vault Styles --- */
+        .tweety-img {
+            width: 120px;
+            height: auto;
+            animation: characterBounce 1.5s infinite;
+            margin-bottom: 20px;
+        }
+
+        /* --- Buttons --- */
+        .primary-btn {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+            transition: 0.3s;
+        }
+        .primary-btn:hover { transform: scale(1.05); background-color: #ff6b81; }
+
+        /* --- Memory Vault (Preserved from original) --- */
         .memory-vault {
             display: flex;
             overflow-x: auto;
             gap: 20px;
             padding: 20px 15px;
-            margin: 10px 0;
+            margin: 20px 0;
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
             scroll-snap-type: x mandatory;
@@ -57,110 +79,59 @@
         .polaroid img { width: 160px; height: 160px; object-fit: cover; background: #f0f0f0; display: block; }
         .polaroid span { display: block; padding-top: 10px; font-family: 'Comic Sans MS', cursive; font-size: 0.85rem; color: #333; }
 
-        /* --- Love Letter Button & Modal --- */
-        .letter-btn {
-            background-color: #ff4757;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
-            margin: 15px 0;
-            transition: 0.3s;
-        }
-        .letter-btn:hover { transform: scale(1.1); background-color: #ff6b81; }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.85);
-            justify-content: center;
+        /* --- Letter Reveal --- */
+        .letter-container {
+            margin: 30px 0;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 20px;
-        }
-        .modal-content {
-            max-width: 90%;
-            max-height: 80%;
-            border: 5px solid white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
-        }
-        .close-modal {
-            position: absolute;
-            top: 20px; right: 30px;
-            color: white; font-size: 40px; font-weight: bold; cursor: pointer;
         }
 
-        /* --- Voucher Styles --- */
-        .meesho-voucher {
-            background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin: 25px auto;
-            max-width: 280px;
+        .envelope-btn {
+            font-size: 80px;
+            background: none;
+            border: none;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.4);
-            border: 3px dashed rgba(255, 255, 255, 0.5);
-            animation: shimmy 2s infinite;
+            transition: transform 0.3s ease;
+            animation: pulse 2s infinite;
         }
-        @keyframes shimmy { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(3deg); } 75% { transform: rotate(-3deg); } }
-        .voucher-amount { display: none; font-size: 1.8rem; font-weight: 900; margin-top: 10px; }
+        .envelope-btn:hover { transform: scale(1.2); }
 
-        /* --- UI Elements --- */
-        #loader {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #DDA0DD; z-index: 100; justify-content: center; align-items: center; flex-direction: column;
+        #letter-display {
+            display: none;
+            margin-top: 20px;
+            max-width: 90%;
+            border: 8px solid white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease-in;
         }
-        .heart-loader { font-size: 80px; animation: heartPulse 1s infinite; }
-        #surprise-page { display: none; }
-        .character-box { display: flex; justify-content: center; align-items: flex-end; gap: 15px; margin-bottom: 5px; }
-        .tweety-img { width: 90px; height: auto; animation: characterBounce 1.5s infinite; }
-        .penguin-container { font-size: 80px; position: relative; animation: characterBounce 1.5s infinite 0.2s; }
-        .rose-hand { font-size: 35px; position: absolute; bottom: 5px; right: 5px; }
-        .hug-btn { background-color: #ff4757; color: white; border: none; padding: 15px 35px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
         /* --- Animations --- */
-        @keyframes heartPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
         @keyframes characterBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
         .petal { position: fixed; top: -10%; z-index: 5; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(110vh) translateX(80px) rotate(360deg); } }
+
+        /* --- Page Toggling --- */
+        #page-2 { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="loader">
-        <div class="heart-loader">❤️</div>
-        <p style="color: #4b0082; font-weight: bold; margin-top: 10px;">Opening Pingu's heart...</p>
+    <div id="page-1" class="container">
+        <img src="tweety.png" alt="Tweety" class="tweety-img">
+        <h1>Happy 1st Anniversary, Tweetu! 🐣❤️</h1>
+        <p style="color: #4b0082; font-weight: bold;">One year of us, and forever to go.</p>
+        <br>
+        <button class="primary-btn" onclick="goToSecondPage()">hug me to seek through my heart 🤗</button>
     </div>
 
-    <div id="letterModal" class="modal">
-        <span class="close-modal" onclick="closeLetter()">&times;</span>
-        <img src="love_letter.png" class="modal-content" alt="Love Letter">
-    </div>
-
-    <div id="main-page" class="container">
-        <h1>kyuki mere liye har din aapke saath valentines day hai🫣🫣</h1>
-        <div class="popup-box">surprise dekhna hai?</div>
-        <div class="btn-group">
-            <button style="background:#8e44ad; color:white; padding:15px 30px; border-radius:30px; border:none; font-weight:bold; cursor:pointer; font-size:1.1rem;" onclick="startLoading()">cholo dekhe nei</button>
-        </div>
-    </div>
-
-    <div id="surprise-page" class="container">
-        <div class="character-box">
-            <img src="tweety.png" alt="Tweety" class="tweety-img">
-            <div class="penguin-container">🐧<span class="rose-hand">💝</span></div>
-        </div>
-
-        <button class="letter-btn" onclick="openLetter()">dil ke andar jhaak lo thoda ❤️</button>
-
-        <h3>Our Memory Vault 📸</h3>
+    <div id="page-2" class="container">
+        <h1>Our Beautiful Year Together ✨</h1>
+        
         <div class="memory-vault">
             <div class="polaroid"> <img src="IMG_20260213_153055.jpg" alt="1"> <span>The Start ✨</span> </div>
             <div class="polaroid"> <img src="IMG20250824114211.jpg" alt="2"> <span>That Smile! 😍</span> </div>
@@ -174,59 +145,44 @@
             <div class="polaroid"> <img src="IMG20260125201150.jpg" alt="10"> <span>Forever! ♾️</span> </div>
         </div>
 
-        <h1>Happy Valentine's Day, Tweetu! 🌹</h1>
-        
-        <div class="meesho-voucher" onclick="revealGift(this)">
-            <div id="gift-instruction">🎁 A Surprise for You! <br><small>(Tap to Unbox)</small></div>
-            <div id="gift-value" class="voucher-amount">
-                ₹578.00
-                <div style="font-size: 0.9rem; font-weight: normal; margin-top: 10px;">Meesho Shopping Spree! 🛍️✨</div>
-                <p style="font-size: 0.7rem; opacity: 0.9;">*Screenshot this to redeem*</p>
-            </div>
+        <div class="letter-container">
+            <h3 style="color: #4b0082;">You have a message...</h3>
+            <button id="letter-btn" class="envelope-btn" onclick="revealLetter()">✉️</button>
+            
+            <img id="letter-display" src="" alt="Anniversary Letter">
         </div>
 
-        <button class="hug-btn" onclick="playMusic()">hug me 🤗</button>
-        <audio id="bg-music"><source src="ChupChupKeMilne.mp3" type="audio/mpeg"></audio>
+        <audio id="anniversary-music">
+            <source src="AETrimKeuJaneNa1777637138885.m4A" type="audio/mpeg">
+        </audio>
     </div>
 
     <script>
-        function startLoading() {
-            document.getElementById('main-page').style.display = 'none';
-            document.getElementById('loader').style.display = 'flex';
-            setTimeout(showSurprise, 1500);
+        function goToSecondPage() {
+            document.getElementById('page-1').style.display = 'none';
+            document.getElementById('page-2').style.display = 'block';
+            startPetals(['❤️', '✨', '💖', '💍']);
         }
 
-        function showSurprise() {
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('surprise-page').style.display = 'block';
-            startPetals(['🌹', '🌸', '💖', '✨']);
-        }
+        function revealLetter() {
+            // Play Music
+            const audio = document.getElementById('anniversary-music');
+            audio.play().catch(e => console.log("Music interaction required"));
 
-        function openLetter() {
-            document.getElementById('letterModal').style.display = 'flex';
-        }
+            // Show Letter
+            const letter = document.getElementById('letter-display');
+            letter.style.display = 'block';
 
-        function closeLetter() {
-            document.getElementById('letterModal').style.display = 'none';
-        }
-
-        function playMusic() {
-            var audio = document.getElementById('bg-music');
-            audio.play().catch(e => console.log("Music blocked."));
-            alert("Sending you the biggest hug ever, Tweetu! ❤️");
-        }
-
-        function revealGift(element) {
-            element.style.animation = 'none';
-            document.getElementById('gift-instruction').style.display = 'none';
-            document.getElementById('gift-value').style.display = 'block';
-            element.style.background = 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)';
-            startPetals(['💸', '💰', '💖', '🛍️', '🎁']);
-            alert("Happy Valentine's Day! Go pick something beautiful on Meesho! 😘");
+            // Change Envelope to Open
+            document.getElementById('letter-btn').innerText = '📂';
+            document.getElementById('letter-btn').style.animation = 'none';
+            
+            // Extra Celebration
+            startPetals(['🌸', '🎊', '✨', '❤️']);
         }
 
         function startPetals(items) {
-            for (let i = 0; i < 35; i++) {
+            for (let i = 0; i < 30; i++) {
                 setTimeout(() => {
                     const petal = document.createElement('div');
                     petal.className = 'petal';
