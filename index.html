@@ -101,7 +101,7 @@
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             animation: fadeIn 1s ease-in;
-            cursor: pointer; /* To indicate it can be clicked to close */
+            cursor: pointer;
         }
 
         .envelope-btn {
@@ -178,7 +178,6 @@
             const surpriseImg = document.getElementById('surprise-img-display');
             surpriseImg.style.display = 'block';
             startPetals(['🎉', '✨', '🎁', '💖']);
-            // Scroll to the surprise image smoothly
             surpriseImg.scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -199,7 +198,9 @@
         function closeLetter() {
             document.getElementById('letter-display').style.display = 'none';
             document.getElementById('close-hint').style.display = 'none';
-            // The music continues to play because we don't call audio.pause()
+            // Reset the button so it can be clicked again
+            document.getElementById('letter-btn').innerText = '✉️';
+            document.getElementById('letter-btn').style.animation = 'pulse 2s infinite';
         }
 
         function startPetals(items) {
